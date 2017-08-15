@@ -1,0 +1,10 @@
+name: 'json api client'
+type: 'module'
+description: 'json api client'
+package: 'synetic modules'
+
+core: 8.x
+project: 'synetic'
+
+dependencies:
+ - "synetic:jms_serializer"

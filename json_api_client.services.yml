@@ -1,0 +1,28 @@
+parameters:
+  synetic.json_api_client.object_map:
+    json_api_metadata: 'Drupal\ccs_webengine_client\Model\JsonApiMetaData'
+
+  synetic.json_api_client.identifier_field: 'uuid'
+
+services:
+  synetic.json_api_client.guzzle:
+    class: GuzzleHttp/Client
+
+  synetic.json_api_client.object_mapper:
+    class: Drupal\json_api_client\Services\JsonApi\JsonApiObjectMapper
+    arguments:
+      - '%synetic.json_api_client.object_map%'
+
+  synetic.json_api_client.response_parser:
+    class: Drupal\json_api_client\Services\JsonApi\JsonApiResponseParser
+
+  synetic.json_api_client.data_processor:
+    class: Drupal\json_api_client\Services\JsonApi\JsonApiDataProcessor
+    arguments:
+      - '@synetic.json_api_client.object_mapper'
+      - '@synetic.jms_serializer.json_serializer'
+      - '%synetic.json_api_client.identifier_field%'
+
+  synetic.json_api_client.client:
+    - '@synetic.json_api_client.guzzle'
+    - '@synetic.json_api_client.response_parser'
