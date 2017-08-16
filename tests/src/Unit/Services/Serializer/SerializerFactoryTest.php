@@ -2,6 +2,7 @@
 
 namespace Drupal\json_api_client\Services\Serializer;
 
+use Drupal\jms_serializer\Services\Serializer\SerializerFactory;
 use Prophecy\Prophet;
 
 class SerializerFactoryTest extends \PHPUnit_Framework_TestCase {

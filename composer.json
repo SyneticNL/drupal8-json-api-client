@@ -23,5 +23,10 @@
             "type": "composer",
             "url": "https://packagist.synetic.nl"
         }
-    ]
+    ],
+    "extra": {
+        "merge-plugin": {
+            "include": "vendor/*/*/composer.json"
+        }
+    }
 }

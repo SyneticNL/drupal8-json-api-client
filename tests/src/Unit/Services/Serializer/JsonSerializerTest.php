@@ -2,14 +2,14 @@
 
 namespace Drupal\json_api_client\Services\Serializer;
 
+use Drupal\jms_serializer\Services\Serializer\JsonSerializer;
+use Drupal\jms_serializer\Services\Serializer\SerializerFactory;
 use Drupal\json_api_client\Interfaces\JsonApiModelInterface;
-use Drupal\json_api_client\Interfaces\SerializableInterface;
+use Drupal\jms_serializer\Interfaces\SerializableInterface;
 use JMS\Serializer\Serializer;
 use Prophecy\Prophet;
 
 class JsonSerializerTest extends \PHPUnit_Framework_TestCase {
-
-
   /** @var Prophet * */
   protected $prophecy;
 
