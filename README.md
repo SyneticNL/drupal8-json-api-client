@@ -54,3 +54,8 @@ When you want to imply a drupal module dependency on this module. Add the follow
 dependencies:
  - "synetic:json_api_client"
 ```
+
+# json_api server #
+
+Drupal 8 had a module for serving json_api requests as a rest service. For this you can use the json_api module.
+https://www.drupal.org/docs/8/modules/json-api
