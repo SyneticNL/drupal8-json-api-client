@@ -7,7 +7,9 @@ namespace Drupal\json_api_client\Iterator;
 use Drupal\json_api_client\Interfaces\JsonApiModelInterface;
 use Drupal\json_api_client\Traits\JsonApiModelTrait;
 
-class JsonApiModelIterator implements \Iterator, \Countable, JsonApiModelInterface {
+class JsonApiModelIterator implements \Iterator, \Countable,
+  JsonApiModelInterface {
+
   use JsonApiModelTrait;
 
   /** @var int */

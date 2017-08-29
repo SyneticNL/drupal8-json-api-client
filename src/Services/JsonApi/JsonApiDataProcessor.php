@@ -4,13 +4,17 @@
 namespace Drupal\json_api_client\Services\JsonApi;
 
 
-use Drupal\json_api_client\Interfaces\JsonApiModelInterface;
-use GuzzleHttp\Psr7\Response;
 use Drupal\jms_serializer\Interfaces\SerializerInterface;
+use Drupal\json_api_client\Interfaces\JsonApiModelInterface;
+use Drupal\json_api_client\Iterator\JsonApiModelIterator;
+use GuzzleHttp\Psr7\Response;
 
 class JsonApiDataProcessor {
+
   const SERIALIZER_FORMAT = 'json';
+
   const JSON_API_MODEL_FIELDS = ['links', 'relationships', 'included'];
+
   const JSON_API_METADATA_TYPE = 'json_api_metadata';
 
   /** @var JsonApiObjectMapper */
@@ -22,7 +26,13 @@ class JsonApiDataProcessor {
   /** @var string */
   private $idField;
 
-
+  /**
+   * JsonApiDataProcessor constructor.
+   *
+   * @param JsonApiObjectMapper $mapper
+   * @param SerializerInterface $serializer
+   * @param string              $idField
+   */
   public function __construct(
     JsonApiObjectMapper $mapper,
     SerializerInterface $serializer,
@@ -42,57 +52,35 @@ class JsonApiDataProcessor {
     $response->getBody()->rewind();
 
     $body = $response->getBody()->getContents();
-    $decoded = json_decode($body, true);
+    $decoded = json_decode($body, TRUE);
 
     return $this->buildModel($decoded);
   }
 
-
   /**
-   * @param JsonApiModelInterface $model
+   * @param $data
    *
-   * @return array
+   * @return JsonApiModelInterface
    */
-  public function createRequestBody(JsonApiModelInterface $model): array
-  {
-    return [
-      static::SERIALIZER_FORMAT => [
-        'data' => [
-          [
-            'type' => $this->mapper->getByLocalDefinition(get_class($model)),
-            'id' => $model->getUniqueIdentifier(),
-            'attributes' => json_decode($this->serializer->serialize($model), true),
-          ],
-        ],
-      ],
-    ];
-  }
+  protected function buildModel($data): JsonApiModelInterface {
+    $model = $this->serializer->deserialize(
+      json_encode(
+        array_merge(
+          [$this->idField => $data['data'][$this->idField]],
+          $data['data']['attributes']
+        )
+      ),
+      $this->mapper->getByRemoteDefinition($data['data']['type'])
+    );
 
-  /**
-   * @param Response $response
-   *
-   * @return JsonApiModelIterator
-   */
-  public function createIterator(Response $response): JsonApiModelIterator {
-    $response->getBody()->rewind();
-    $body = $response->getBody()->getContents();
+    if (!($model instanceof JsonApiModelInterface)) {
+      return $model;
+    }
 
-    $decoded = json_decode($body, true);
+    $metadata = $this->createJsonApiMetaDataModel($data);
+    $model->setJsonApiMetaData($metadata);
 
-    $modelList = array_map(function ($row) {
-      if (! isset($row['data'])) {
-        return $this->buildModel(['data' => $row]);
-      }
-
-      return $this->buildModel($row);
-    }, $decoded['data']);
-
-    $metadata = $this->createJsonApiMetaDataModel($decoded);
-
-    $iterator = new JsonApiModelIterator($modelList);
-    $iterator->setJsonApiMetaData($metadata);
-
-    return $iterator;
+    return $model;
   }
 
   /**
@@ -127,28 +115,52 @@ class JsonApiDataProcessor {
   }
 
   /**
-   * @param $data
+   * @param JsonApiModelInterface $model
    *
-   * @return JsonApiModelInterface
+   * @return array
    */
-  protected function buildModel($data): JsonApiModelInterface {
-    $model = $this->serializer->deserialize(
-      json_encode(
-        array_merge(
-          [$this->idField => $data['data'][$this->idField]],
-          $data['data']['attributes']
-        )
-      ),
-      $this->mapper->getByRemoteDefinition($data['data']['type'])
+  public function createRequestBody(JsonApiModelInterface $model): array {
+    return [
+      static::SERIALIZER_FORMAT => [
+        'data' => [
+          [
+            'type' => $this->mapper->getByLocalDefinition(get_class($model)),
+            'id' => $model->getUniqueIdentifier(),
+            'attributes' => json_decode(
+              $this->serializer->serialize($model), TRUE
+            ),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @param Response $response
+   *
+   * @return JsonApiModelIterator
+   */
+  public function createIterator(Response $response): JsonApiModelIterator {
+    $response->getBody()->rewind();
+    $body = $response->getBody()->getContents();
+
+    $decoded = json_decode($body, TRUE);
+
+    $modelList = array_map(
+      function ($row) {
+        if (!isset($row['data'])) {
+          return $this->buildModel(['data' => $row]);
+        }
+
+        return $this->buildModel($row);
+      }, $decoded['data']
     );
 
-    if ( ! ($model instanceof JsonApiModelInterface)) {
-      return $model;
-    }
+    $metadata = $this->createJsonApiMetaDataModel($decoded);
 
-    $metadata = $this->createJsonApiMetaDataModel($data);
-    $model->setJsonApiMetaData($metadata);
+    $iterator = new JsonApiModelIterator($modelList);
+    $iterator->setJsonApiMetaData($metadata);
 
-    return $model;
+    return $iterator;
   }
 }

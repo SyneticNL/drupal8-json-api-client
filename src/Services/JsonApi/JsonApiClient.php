@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 
 class JsonApiClient {
+
   const SERIALIZER_FORMAT = 'json';
 
   /** @var Client */
@@ -35,7 +36,7 @@ class JsonApiClient {
    * Get a single object from the external service.
    *
    * @param string $url
-   * @param array $parameters
+   * @param array  $parameters
    *
    * @return Response
    */
@@ -44,15 +45,32 @@ class JsonApiClient {
   }
 
   /**
-   * Get a list of objects from the external service.
-   *
+   * @param string $method
    * @param string $url
-   * @param array $parameters
+   * @param array  $parameters
    *
    * @return Response
    */
-  public function getList(string $url, array $parameters): Response {
-    return $this->executeRequest('get', $url, $parameters);
+  protected function executeRequest(
+    string $method, string $url, array $parameters
+  ): Response {
+    $response = $this->httpClient->request(
+      $method,
+      $url,
+      $parameters
+    );
+
+    if ($this->apiResponseParser->doesResponseHaveErrors($response)) {
+      $response->getBody()->rewind();
+      $body = $response->getBody()->getContents();
+      $this->logErrors($body);
+
+      throw new JsonApiClientResponseException(
+        $this->apiResponseParser->getErrorSummaryString($response)
+      );
+    }
+
+    return $response;
   }
 
   /**
@@ -65,17 +83,30 @@ class JsonApiClient {
 
     foreach ($data->errors as $error) {
       \Drupal::logger(
-        'ccs_webengine_client')->error(
+        'ccs_webengine_client'
+      )->error(
         json_encode($error)
       );
     }
   }
 
   /**
+   * Get a list of objects from the external service.
+   *
+   * @param string $url
+   * @param array  $parameters
+   *
+   * @return Response
+   */
+  public function getList(string $url, array $parameters): Response {
+    return $this->executeRequest('get', $url, $parameters);
+  }
+
+  /**
    * Post a new object to the external service.
    *
    * @param string $url
-   * @param array $parameters
+   * @param array  $parameters
    *
    * @return Response
    */
@@ -87,7 +118,7 @@ class JsonApiClient {
    * Put a new object to the external service.
    *
    * @param string $url
-   * @param array $parameters
+   * @param array  $parameters
    *
    * @return Response
    */
@@ -99,7 +130,7 @@ class JsonApiClient {
    * Patch an object to the external service.
    *
    * @param string $url
-   * @param array $parameters
+   * @param array  $parameters
    *
    * @return Response
    */
@@ -111,36 +142,11 @@ class JsonApiClient {
    * Delete an object from the remote service.
    *
    * @param string $url
-   * @param array $parameters
+   * @param array  $parameters
    *
    * @return Response
    */
   public function delete(string $url, array $parameters): Response {
     return $this->executeRequest('delete', $url, $parameters);
-  }
-
-  /**
-   * @param string $method
-   * @param string $url
-   * @param array $parameters
-   *
-   * @return Response
-   */
-  protected function executeRequest(string $method, string $url, array $parameters): Response {
-    $response = $this->httpClient->request(
-      $method,
-      $url,
-      $parameters
-    );
-
-    if ($this->apiResponseParser->doesResponseHaveErrors($response)) {
-      $response->getBody()->rewind();
-      $body = $response->getBody()->getContents();
-      $this->logErrors($body);
-
-      throw new JsonApiClientResponseException($this->apiResponseParser->getErrorSummaryString($response));
-    }
-
-    return $response;
   }
 }

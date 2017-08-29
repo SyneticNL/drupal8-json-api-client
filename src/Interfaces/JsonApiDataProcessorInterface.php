@@ -8,6 +8,7 @@ use Drupal\json_api_client\Iterator\JsonApiModelIterator;
 use GuzzleHttp\Psr7\Response;
 
 interface JsonApiDataProcessorInterface {
+
   /**
    * @param Response $response
    *

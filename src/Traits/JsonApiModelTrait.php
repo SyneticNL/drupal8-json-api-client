@@ -7,6 +7,7 @@ namespace Drupal\json_api_client\Traits;
 use Drupal\json_api_client\Model\JsonApiMetaData;
 
 trait JsonApiModelTrait {
+
   /**
    * @var JsonApiMetaData
    *

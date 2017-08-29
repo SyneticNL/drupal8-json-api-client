@@ -8,6 +8,7 @@ use Drupal\json_api_client\Interfaces\JsonApiModelInterface;
 use JMS\Serializer\Annotation as Serializer;
 
 class JsonApiMetaData implements JsonApiModelInterface {
+
   /**
    * @Serializer\Type("array")
    * @Serializer\Accessor(setter="setRelationships")
@@ -75,6 +76,9 @@ class JsonApiMetaData implements JsonApiModelInterface {
     $this->included = $included;
   }
 
+  /**
+   * @return string
+   */
   public function getUniqueIdentifier(): string {
     return 'meta-data';
   }
