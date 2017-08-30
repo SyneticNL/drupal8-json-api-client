@@ -12,17 +12,27 @@ class JsonApiClient {
 
   const SERIALIZER_FORMAT = 'json';
 
-  /** @var Client */
+  /**
+   * The guzzle http client.
+   *
+   * @var \GuzzleHttp\Client
+   */
   private $httpClient;
 
-  /** @var JsonApiResponseParser */
+  /**
+   * The Json api response parser.
+   *
+   * @var JsonApiResponseParser
+   */
   private $apiResponseParser;
 
   /**
    * CcsWebEngineClient constructor.
    *
    * @param Client $httpClient
+   *   The guzzle http client.
    * @param JsonApiResponseParser $apiResponseParser
+   *   The json api response parser.
    */
   public function __construct(
     Client $httpClient,
@@ -36,23 +46,34 @@ class JsonApiClient {
    * Get a single object from the external service.
    *
    * @param string $url
-   * @param array  $parameters
+   *   The url.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   Http guzzle response.
    */
   public function get(string $url, array $parameters): Response {
     return $this->executeRequest('get', $url, $parameters);
   }
 
   /**
+   * Execute a http request.
+   *
    * @param string $method
+   *   The request method to execute.
    * @param string $url
-   * @param array  $parameters
+   *   The url to request.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   Http guzzle response.
    */
   protected function executeRequest(
-    string $method, string $url, array $parameters
+    string $method,
+    string $url,
+    array $parameters
   ): Response {
     $response = $this->httpClient->request(
       $method,
@@ -77,6 +98,7 @@ class JsonApiClient {
    * Log all the errors.
    *
    * @param string $response
+   *   The guzzle response.
    */
   protected function logErrors(string $response) {
     $data = json_decode($response);
@@ -94,9 +116,12 @@ class JsonApiClient {
    * Get a list of objects from the external service.
    *
    * @param string $url
-   * @param array  $parameters
+   *   The request url.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   The guzzle response.
    */
   public function getList(string $url, array $parameters): Response {
     return $this->executeRequest('get', $url, $parameters);
@@ -106,9 +131,12 @@ class JsonApiClient {
    * Post a new object to the external service.
    *
    * @param string $url
-   * @param array  $parameters
+   *   The url to request.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   The guzzle response.
    */
   public function post(string $url, array $parameters): Response {
     return $this->executeRequest('post', $url, $parameters);
@@ -118,9 +146,12 @@ class JsonApiClient {
    * Put a new object to the external service.
    *
    * @param string $url
-   * @param array  $parameters
+   *   The url to request.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   The guzzle response.
    */
   public function put(string $url, array $parameters): Response {
     return $this->executeRequest('put', $url, $parameters);
@@ -130,9 +161,12 @@ class JsonApiClient {
    * Patch an object to the external service.
    *
    * @param string $url
-   * @param array  $parameters
+   *   The url to request.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   The guzzle response.
    */
   public function patch(string $url, array $parameters): Response {
     return $this->executeRequest('patch', $url, $parameters);
@@ -142,11 +176,15 @@ class JsonApiClient {
    * Delete an object from the remote service.
    *
    * @param string $url
-   * @param array  $parameters
+   *   The url to request.
+   * @param array $parameters
+   *   The request parameters.
    *
    * @return Response
+   *   The guzzle response.
    */
   public function delete(string $url, array $parameters): Response {
     return $this->executeRequest('delete', $url, $parameters);
   }
+
 }

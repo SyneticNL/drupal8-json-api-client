@@ -8,7 +8,11 @@ use Drupal\json_api_client\Exception\JsonApiObjectMappingDoesNotExistException;
 
 class JsonApiObjectMapper {
 
-  /** @var array */
+  /**
+   * The object map.
+   *
+   * @var array
+   */
   protected $objectMap = [];
 
   /**
@@ -21,11 +25,15 @@ class JsonApiObjectMapper {
   }
 
   /**
-   * @param $definition
+   * Get the local object type by the remote definition.
    *
-   * @return mixed
+   * @param string $definition
+   *   The definition to lookup.
+   *
+   * @return string
+   *   The return definition.
    */
-  public function getByRemoteDefinition($definition) {
+  public function getByRemoteDefinition(string $definition): string {
     if (!$this->hasRemoteDefinition($definition)) {
       throw new JsonApiObjectMappingDoesNotExistException(
         sprintf(
@@ -39,20 +47,28 @@ class JsonApiObjectMapper {
   }
 
   /**
-   * @param $definition
+   * Does the remote definition exist in the map.
+   *
+   * @param string $definition
+   *   The definition to lookup.
    *
    * @return bool
+   *   Does the definition exist.
    */
-  public function hasRemoteDefinition($definition) {
+  public function hasRemoteDefinition(string $definition): bool {
     return isset($this->objectMap[$definition]);
   }
 
   /**
-   * @param $definition
+   * Get the remote definition by the local definition.
    *
-   * @return false|int|string
+   * @param string $definition
+   *   The definition to lookup.
+   *
+   * @return string
+   *   The remote definition.
    */
-  public function getByLocalDefinition($definition) {
+  public function getByLocalDefinition(string $definition): string {
     if (!$this->hasLocalDefinition($definition)) {
       throw new JsonApiObjectMappingDoesNotExistException(
         sprintf(
@@ -66,11 +82,15 @@ class JsonApiObjectMapper {
   }
 
   /**
-   * @param $definition
+   * Does the local definition exist.
+   *
+   * @param string $definition
+   *   The definition to lookup.
    *
    * @return bool
+   *   Does the definition exist.
    */
-  public function hasLocalDefinition($definition) {
+  public function hasLocalDefinition(string $definition): bool {
     return in_array($definition, $this->objectMap);
   }
 }

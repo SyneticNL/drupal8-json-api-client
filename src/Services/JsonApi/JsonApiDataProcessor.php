@@ -30,8 +30,11 @@ class JsonApiDataProcessor {
    * JsonApiDataProcessor constructor.
    *
    * @param JsonApiObjectMapper $mapper
+   *   The json api object mapper.
    * @param SerializerInterface $serializer
-   * @param string              $idField
+   *   The serializer.
+   * @param string $idField
+   *   The id field to use in the responses.
    */
   public function __construct(
     JsonApiObjectMapper $mapper,
@@ -44,9 +47,13 @@ class JsonApiDataProcessor {
   }
 
   /**
+   * Create a Json api model from the guzzle response.
+   *
    * @param Response $response
+   *   The guzzle response.
    *
    * @return JsonApiModelInterface
+   *   The json api model.
    */
   public function createModel(Response $response): JsonApiModelInterface {
     $response->getBody()->rewind();
@@ -58,9 +65,13 @@ class JsonApiDataProcessor {
   }
 
   /**
-   * @param $data
+   * Build the json api model.
+   *
+   * @param mixed $data
+   *   The dataset to convert.
    *
    * @return JsonApiModelInterface
+   *   The model.
    */
   protected function buildModel($data): JsonApiModelInterface {
     $model = $this->serializer->deserialize(
@@ -84,9 +95,13 @@ class JsonApiDataProcessor {
   }
 
   /**
-   * @param $data
+   * Create the json api metadata model.
+   *
+   * @param mixed $data
+   *   The dataset to convert.
    *
    * @return JsonApiModelInterface
+   *   The json api meta data.
    */
   protected function createJsonApiMetaDataModel($data): JsonApiModelInterface {
     $metaDataData = [];
@@ -115,9 +130,13 @@ class JsonApiDataProcessor {
   }
 
   /**
+   * Convert a json api model to a request.
+   *
    * @param JsonApiModelInterface $model
+   *   The model to convert.
    *
    * @return array
+   *    The request data.
    */
   public function createRequestBody(JsonApiModelInterface $model): array {
     return [
@@ -136,9 +155,13 @@ class JsonApiDataProcessor {
   }
 
   /**
+   * Create a list of json api models.
+   *
    * @param Response $response
+   *   The guzzle response.
    *
    * @return JsonApiModelIterator
+   *   The iterator.
    */
   public function createIterator(Response $response): JsonApiModelIterator {
     $response->getBody()->rewind();
@@ -163,4 +186,5 @@ class JsonApiDataProcessor {
 
     return $iterator;
   }
+
 }
