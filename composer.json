@@ -1,0 +1,32 @@
+{
+    "name": "synetic/json_api_client",
+    "description": "Json api client",
+    "type": "synetic-module",
+    "license": "proprietary",
+    "require": {
+        "php": ">= 7.1",
+        "guzzlehttp/guzzle": "^6.3",
+        "composer/installers": "^1.4",
+        "synetic/jms_serializer": "*@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit":  ">=4.8.28 <5",
+        "phpspec/prophecy": "^1.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\json_api_client\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.synetic.nl"
+        }
+    ],
+    "extra": {
+        "merge-plugin": {
+            "include": "vendor/*/*/composer.json"
+        }
+    }
+}
