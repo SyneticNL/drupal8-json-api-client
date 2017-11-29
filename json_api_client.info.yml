@@ -5,6 +5,3 @@ package: 'synetic modules'
 
 core: 8.x
 project: 'synetic'
-
-dependencies:
- - "synetic:jms_serializer"
