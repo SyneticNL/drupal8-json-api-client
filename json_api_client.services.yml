@@ -1,9 +1,9 @@
 services:
   drupal.synetic.json_api_client.guzzle:
-    class: GuzzleHttp/Client
+    class: GuzzleHttp\Client
 
   drupal.synetic.json_api_client.response_parser:
-    class: Synetic\JsonApiClient\JsonApiResponseParser
+    class: Synetic\JsonApiClient\ResponseParser
 
   drupal.synetic.json_api_client.body_stream_factory:
     class: Synetic\JsonApiClient\BodyStreamFactory
