@@ -10,6 +10,7 @@ services:
 
   drupal.synetic.json_api_client.client:
     class: Synetic\JsonApiClient\JsonApiClient
-    - '@drupal.synetic.json_api_client.guzzle'
-    - '@drupal.synetic.json_api_client.response_parser'
-    - '@drupal.synetic.json_api_client.body_stream_factory'
+    arguments:
+      - '@drupal.synetic.json_api_client.guzzle'
+      - '@drupal.synetic.json_api_client.response_parser'
+      - '@drupal.synetic.json_api_client.body_stream_factory'
