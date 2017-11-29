@@ -6,7 +6,7 @@
     "require": {
         "php": ">= 7.1",
         "composer/installers": "^1.4",
-        "synetic/json-api-client": "^0.0.1"
+        "synetic/json-api-client": "^0"
     },
     "repositories": [
         {
