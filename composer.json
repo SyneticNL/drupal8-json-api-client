@@ -1,13 +1,22 @@
 {
     "name": "drupal/json_api_client",
-    "description": "Json api client",
+    "description": "Drupal 8 integration for the json api client",
     "type": "drupal-module",
-    "license": "proprietary",
+
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marc van Duivenvoorde",
+            "email": "marc.vanduivenvoorde@synetic.nl"
+        }
+    ],
+
     "require": {
         "php": ">= 7.1",
         "composer/installers": "^1.4",
         "synetic/json-api-client": "^0"
     },
+
     "repositories": [
         {
             "type": "composer",
