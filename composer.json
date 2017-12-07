@@ -1,5 +1,5 @@
 {
-  "name": "synetic/drupal8-json-api-client",
+  "name": "drupal/json_api_client",
   "description": "Drupal 8 integration for the json api client",
   "type": "drupal-module",
   "license": "MIT",
